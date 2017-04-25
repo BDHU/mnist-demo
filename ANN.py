@@ -19,6 +19,7 @@ class ANN(object):
         a = (1/(1+np.exp(-x)))
         return a
         
+    # Input an array of images each with 784 pixels
     def netInputsHiddenLayer(self, inputs):
         nodeSum = 0
         hiddenLayerSums = []
@@ -29,6 +30,7 @@ class ANN(object):
             for weightCount in range(0, size):
                 nodeSum += inputs[inputCount]*self.hidden_weights[nodeCount][weightCount]
                 inputCount+=1
+                # TODO check
                 if(inputCount > 784):       
                     inputCount = 0
                     hiddenLayerSums.append(nodeSum)
@@ -62,6 +64,11 @@ class ANN(object):
         for num in range(0, 10):
             outputNodes.append(self.activation(outputSums[num]))
         return outputNodes
+
+    # Take a array of 10 elements and apply softmax on it so that the sum of 
+    # probabilities is equal to 1
+    def softmax(self, input):
+    	
 
     def evaluate(self,inputs):
         hiddenLayerInputs = [1]
