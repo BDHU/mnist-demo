@@ -37,18 +37,20 @@ toolbox.register("attr_real", np.random.uniform, 0, 1)
 # create hidden weigts
 num_weigts = ((num_inputs+1) * num_hidden_nodes) + (num_outputs*(num_hidden_nodes+1))
 toolbox.register("individual", tools.initRepeat, creator.Individual, toolbox.attr_real, num_weigts)
-toolbox.register("population", tools.initRepeat, list, toolbox.individual, 100)
+toolbox.register("population", tools.initRepeat, list, toolbox.individual, 1)
 
 # Fitness Evaluation:
-# 
-count = 0
+# init ANN object here and passin the image array to evaluate
 def evalANN(individual):
     # indivual here is a list of weight of ANN
-    actualOutputArray = ANN(num_inputs, num_hidden_nodes, num_outputs, individual).evaluate(matrixOfTestData[count])
-    expectedOutputArray = outputCheckArray[count]
+    count = 0
+    ann = ANN(num_inputs, num_hidden_nodes, num_outputs, individual)
     sumError = 0
-    for i in range(0, len(outputarray)):
-    	sumError = sumError + math.pow((actualOutputArray[i] - expectedOutputArray[i]), 2)
+    while (count < 44000):
+    	actualOutputArray = ann.evaluate(individual)
+    	expectedOutputArray = outputcheckarray[count]
+    	for i in range(0, len(outputarray)):
+    		sumError = sumError + math.pow((actualOutputArray[i] - expectedOutputArray[i]), 2)
     return sumError, 
     #return 0,
     # comma at the end is necessary since DEAP stores fitness values as a tuple
@@ -72,17 +74,8 @@ toolbox.register("map", map)
 # pop = toolbox.population(?)
 pop = toolbox.population()
 
-# Create initial population (each individual represents an agent or ANN):
-for ind in pop:
-    # ind (individual) corresponds to the list of weights
-    # ANN class is initialized with ANN parameters and the list of weights
-    # TODO check
-    ann = ANN(4, 2, 2, ind)
-    my_game.add_agent(ann)
-
 # Let's evaluate the fitness of each individual.
 # First, simulation should be run!
-my_game.game_loop(False) # Set it to "False" for headless mode;
 #recommended for training, otherwise learning process will be very slow!
     
 # Let's collect the fitness values from the simulation using
@@ -90,39 +83,25 @@ fitnesses = list(map(toolbox.evaluate, pop))
 for ind, fit in zip(pop, fitnesses):
     ind.fitness.values = fit
 
-for g in range(1, config.game['n_gen']):
-    my_game.generation += 1
-    my_game.reset()
-        
+for g in range(1, 2):
     # Start creating the children (or offspring)
 
     # First, Apply selection:
     offspring = toolbox.select(pop, k=len(pop))
     # Apply variations (xover and mutation), Ex: algorithms.varAnd(?, ?, ?, ?)
-    offspring = algorithms.varAnd(offspring, toolbox, config.game['prob_xover'], config.game['prob_mut'])
+    offspring = algorithms.varAnd(offspring, toolbox, 0.5, 0.2)
     pop[:] = offspring
     # Repeat the process of fitness evaluation below. You need to put the recently
     # created offspring-ANN's into the game (Line 55-69) and extract their fitness values:
-    for ind in offspring:
-    	# TODO check
-    	ann = ANN(4, 2, 2, ind)
-    	my_game.add_agent(ann)
-    my_game.game_loop(False)
     fits = toolbox.map(toolbox.evaluate, offspring)
     for ind, fit in zip(pop, fits):
-	ind.fitness.values = fit
+		ind.fitness.values = fit
     # One way of implementing elitism is to combine parents and children to give them equal chance to compete:
     # For example: pop[:] = pop + offspring
     # Otherwise you can select the parents of the generation from the offspring population only: pop[:] = offspring
 
     # This is the end of the "for" loop (end of generations!)
-	
-data_gen.generate_cvs(my_game.data)
-raw_input("Training is over!")
-while True:
-    my_game.game_loop(True)
 
-pygame.quit()
 
 
 
