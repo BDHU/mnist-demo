@@ -1,6 +1,7 @@
 import numpy as np
 import random
 
+#per Dr. Tutum use 1 Hidden Layer with 20 Nodes!!
 class ANN(object):
     def __init__(self, num_inputs, num_hidden_nodes, num_outputs, weights):
         self.weights = weights # this is an individual which is actually a list of weights (genome)
