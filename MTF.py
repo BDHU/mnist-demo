@@ -8,7 +8,7 @@ from deap import algorithms
 import numpy as np
 import random
 import math
-
+from ANN import ANN
 
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
@@ -37,7 +37,7 @@ toolbox.register("attr_real", np.random.uniform, 0, 1)
 # create hidden weigts
 num_weigts = ((num_inputs+1) * num_hidden_nodes) + (num_outputs*(num_hidden_nodes+1))
 toolbox.register("individual", tools.initRepeat, creator.Individual, toolbox.attr_real, num_weigts)
-toolbox.register("population", tools.initRepeat, list, toolbox.individual, 1)
+toolbox.register("population", tools.initRepeat, list, toolbox.individual, 10)
 
 # Fitness Evaluation:
 # init ANN object here and passin the image array to evaluate
@@ -45,13 +45,16 @@ def evalANN(individual):
     # indivual here is a list of weight of ANN
     count = 0
     ann = ANN(num_inputs, num_hidden_nodes, num_outputs, individual)
+    # TODO check, how pass in the
     sumError = 0
-    while (count < 44000):
-    	actualOutputArray = ann.evaluate(individual)
+    while count < 44000:
+    	outputarray = ann.evaluate(individual)
     	expectedOutputArray = outputcheckarray[count]
     	for i in range(0, len(outputarray)):
-    		sumError = sumError + math.pow((actualOutputArray[i] - expectedOutputArray[i]), 2)
-    return sumError, 
+    		sumError = sumError + math.pow((outputarray[i] - expectedOutputArray[i]), 2)
+    	count = count + 1
+    print(sumError)
+    return sumError,
     #return 0,
     # comma at the end is necessary since DEAP stores fitness values as a tuple
 
@@ -73,9 +76,6 @@ toolbox.register("map", map)
 
 # pop = toolbox.population(?)
 pop = toolbox.population()
-
-# Let's evaluate the fitness of each individual.
-# First, simulation should be run!
 #recommended for training, otherwise learning process will be very slow!
     
 # Let's collect the fitness values from the simulation using
@@ -83,7 +83,8 @@ fitnesses = list(map(toolbox.evaluate, pop))
 for ind, fit in zip(pop, fitnesses):
     ind.fitness.values = fit
 
-for g in range(1, 2):
+for g in range(1, 10):
+        
     # Start creating the children (or offspring)
 
     # First, Apply selection:
@@ -95,14 +96,16 @@ for g in range(1, 2):
     # created offspring-ANN's into the game (Line 55-69) and extract their fitness values:
     fits = toolbox.map(toolbox.evaluate, offspring)
     for ind, fit in zip(pop, fits):
-		ind.fitness.values = fit
+    	ind.fitness.values = fit
     # One way of implementing elitism is to combine parents and children to give them equal chance to compete:
     # For example: pop[:] = pop + offspring
     # Otherwise you can select the parents of the generation from the offspring population only: pop[:] = offspring
 
     # This is the end of the "for" loop (end of generations!)
-
-
+    f = open('results.txt', 'w')
+    for ind in pop:
+    	f.write(ind)
+    f.close()
 
 
 

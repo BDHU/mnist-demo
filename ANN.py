@@ -67,9 +67,6 @@ class ANN(object):
 
     # Take a array of 10 elements and apply softmax on it so that the sum of 
     # probabilities is equal to 1
-    def softmax(self, input):
-    	
-
     def evaluate(self,inputs):
         hiddenLayerInputs = [1]
         for num in range(0, len(inputs)):
