@@ -6,8 +6,6 @@ from deap import creator
 from deap import tools
 from deap import algorithms
 import numpy as np
-import random
-import math
 from ANN import ANN
 
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
@@ -47,22 +45,17 @@ def evalANN(individual):
     ann = ANN(num_inputs, num_hidden_nodes, num_outputs, individual)
     # TODO check, how pass in the
     sumError = 0
-    bestError = 1000000000
+    # bestError = 1000000000
     while count < 5500:
-    	outputarray = ann.evaluate(individual)
-    	expectedOutputArray = outputcheckarray[count]
-    	for i in range(0, len(outputarray)):
-    		error = pow(outputarray[i] - expectedOutputArray[i],2)
-    		if (error < bestError)
-    			bestError = error
-    		sumError = sumError + error
-    	count = count + 1
-    printError = sumError/10.0
-    print("Sum error: " + str(printError))
-    print("Best error: " + str(bestError))
-    # classify 
+        outputarray = ann.evaluate(individual)
+        expectedOutputArray = outputcheckarray[count]
+        for i in range(0, len(outputarray)):
+            error = pow(outputarray[i] - expectedOutputArray[i],2)
+            # if (error < bestError):
+            #     bestError = error
+            sumError = sumError + error
+        count = count + 1
     return sumError,
-    #return 0,
     # comma at the end is necessary since DEAP stores fitness values as a tuple
 
 toolbox.register("evaluate", evalANN)
@@ -71,7 +64,7 @@ toolbox.register("evaluate", evalANN)
 # selection
 toolbox.register("select", tools.selTournament, tournsize=3)
 # crossover
-toolbox.register("mate", tools.cxTwoPoint)	#TODO check if the method is right
+toolbox.register("mate", tools.cxTwoPoint)
 # mutation
 toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=.1, indpb=.5)
 toolbox.register("map", map)
@@ -102,17 +95,23 @@ for g in range(1, 10):
     # Repeat the process of fitness evaluation below. You need to put the recently
     # created offspring-ANN's into the game (Line 55-69) and extract their fitness values:
     fits = toolbox.map(toolbox.evaluate, offspring)
+    fit_sum = 0
+    fit_best = 10000000
     for ind, fit in zip(pop, fits):
-    	ind.fitness.values = fit
+        ind.fitness.values = fit
+        if fit_best < fit[0]:
+            fit_best = fit[0]
+        fit_sum = fit_sum + fit[0]
+    print fit_best + ", " + (fit_sum/10)
     # One way of implementing elitism is to combine parents and children to give them equal chance to compete:
     # For example: pop[:] = pop + offspring
     # Otherwise you can select the parents of the generation from the offspring population only: pop[:] = offspring
 
     # This is the end of the "for" loop (end of generations!)
-    f = open('results.txt', 'w')
-    for ind in pop:
-    	f.write(ind)
-    f.close()
+    # f = open('results.txt', 'w')
+    # for ind in pop:
+    #     f.write(ind)
+    # f.close()
 
 
 
