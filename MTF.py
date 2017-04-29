@@ -96,13 +96,13 @@ for g in range(1, 10):
     # created offspring-ANN's into the game (Line 55-69) and extract their fitness values:
     fits = toolbox.map(toolbox.evaluate, offspring)
     fit_sum = 0
-    fit_best = 10000000
+    fit_best = 0
     for ind, fit in zip(pop, fits):
         ind.fitness.values = fit
         if fit_best < fit[0]:
             fit_best = fit[0]
         fit_sum = fit_sum + fit[0]
-    print fit_best + ", " + (fit_sum/10)
+    print fit_best, ", ", (fit_sum/10)
     # One way of implementing elitism is to combine parents and children to give them equal chance to compete:
     # For example: pop[:] = pop + offspring
     # Otherwise you can select the parents of the generation from the offspring population only: pop[:] = offspring
