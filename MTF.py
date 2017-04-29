@@ -47,13 +47,20 @@ def evalANN(individual):
     ann = ANN(num_inputs, num_hidden_nodes, num_outputs, individual)
     # TODO check, how pass in the
     sumError = 0
-    while count < 44000:
+    bestError = 1000000000
+    while count < 5500:
     	outputarray = ann.evaluate(individual)
     	expectedOutputArray = outputcheckarray[count]
     	for i in range(0, len(outputarray)):
-    		sumError = sumError + math.pow((outputarray[i] - expectedOutputArray[i]), 2)
+    		error = pow(outputarray[i] - expectedOutputArray[i],2)
+    		if (error < bestError)
+    			bestError = error
+    		sumError = sumError + error
     	count = count + 1
-    print(sumError)
+    printError = sumError/10.0
+    print("Sum error: " + str(printError))
+    print("Best error: " + str(bestError))
+    # classify 
     return sumError,
     #return 0,
     # comma at the end is necessary since DEAP stores fitness values as a tuple
