@@ -108,43 +108,47 @@ for g in range(1, 10):
     # Otherwise you can select the parents of the generation from the offspring population only: pop[:] = offspring
 
 # This is the end of the "for" loop (end of generations!)
-#f = open('results.txt', 'w')
-#for ind in pop:
-#	f.write(ind)
-#f.close()
+index = 1
+for ind in pop:
+    file_name = "weights" + str(index) + ".txt"
+    thefile = open(file_name, 'w')
+    index = index + 1
+    for i in ind:
+        thefile.write("%s\n" % i)
 
-correctnessCount = 0.0
 correctnessVals = []
 for ind in pop:
-	count = 5500
-	ann = ANN(num_inputs, num_hidden_nodes, num_outputs, individual)
-	# iterate through 5500 -> 55000
-	while count < 55000:
-		outputarray = ann.evaluate(matrixOfTestData[count])
-        	expectedOutputArray = outputcheckarray[count]
-		index = 0
-		expectedAnswer = 0
-		actualAnswer = 0
-		maxOfActual = outputarray[0]
-		maxOfExpected = expectedOutputArray[0]
-		# loop through both output arrays
-		while (index < len(expectedOutputArray)):
-			# if you found an element larger than your current max then change your max value accordingly
-			if(maxOfActual < outputarray[index]):
-				maxOfActual = outputarray[index]
-				actualAnswer = index
-			# if you found an element larger than your current max then change your max value accordingly
-			if(maxOfExpected < expectedOutputArray[index]):
-				maxOfExpected = expectedOutputArray[index]
-				expectedAnswer = index
-			index = index +1
-		if(expectedAnswer == actualAnswer):
-			correctnessCount = correctnessCount + 1.0
-	correctnessPercentage = float(correctnessCount) / 49500.0
-	correctnessVals.append(correctnessPercentage)
+    correctnessCount = 0.0
+    count = 5500
+    ann = ANN(num_inputs, num_hidden_nodes, num_outputs, ind)
+    # iterate through 5500 -> 55000
+    while count < 55000:
+        outputarray = ann.evaluate(matrixOfTestData[count])
+        expectedOutputArray = outputcheckarray[count]
+        index = 0
+        expectedAnswer = 0
+        actualAnswer = 0
+        maxOfActual = outputarray[0]
+        maxOfExpected = expectedOutputArray[0]
+        count = count + 1
+        # loop through both output arrays
+        while index < len(expectedOutputArray):
+            # if you found an element larger than your current max then change your max value accordingly
+            if maxOfActual < outputarray[index]:
+                maxOfActual = outputarray[index]
+                actualAnswer = index
+            # if you found an element larger than your current max then change your max value accordingly
+            if maxOfExpected < expectedOutputArray[index]:
+                maxOfExpected = expectedOutputArray[index]
+                expectedAnswer = index
+            index = index + 1
+            if expectedAnswer == actualAnswer:
+                correctnessCount = correctnessCount + 1.0
+    correctnessPercentage = float(correctnessCount) / 49500.0
+    correctnessVals.append(correctnessPercentage)
 sumPercentage = 0.0
 for val in correctnessVals:
-	sumPercentage = sumPercentage + val
+    sumPercentage = sumPercentage + val
 finalCorrectnessPercentage = sumPercentage / float(len(correctnessVals))
 print("Correctness Percentage: " + str(finalCorrectnessPercentage))
 
