@@ -45,14 +45,14 @@ def evalANN(individual):
     ann = ANN(num_inputs, num_hidden_nodes, num_outputs, individual)
     # TODO check, how pass in the
     sumError = 0
-    # bestError = 1000000000
+    #bestError = 1000000000
     while count < 5500:
         outputarray = ann.evaluate(matrixOfTestData[count])
         expectedOutputArray = outputcheckarray[count]
         for i in range(0, len(outputarray)):
             error = pow(outputarray[i] - expectedOutputArray[i],2)
-            # if (error < bestError):
-            #     bestError = error
+             #if (error < bestError):
+              #   bestError = error
             sumError = sumError + error
         count = count + 1
     return sumError,
@@ -107,11 +107,45 @@ for g in range(1, 10):
     # For example: pop[:] = pop + offspring
     # Otherwise you can select the parents of the generation from the offspring population only: pop[:] = offspring
 
-    # This is the end of the "for" loop (end of generations!)
-     f = open('results.txt', 'w')
-     for ind in pop:
-         f.write(ind)
-     f.close()
+# This is the end of the "for" loop (end of generations!)
+#f = open('results.txt', 'w')
+#for ind in pop:
+#	f.write(ind)
+#f.close()
 
+correctnessCount = 0.0
+correctnessVals = []
+for ind in pop:
+	count = 5500
+	ann = ANN(num_inputs, num_hidden_nodes, num_outputs, individual)
+	# iterate through 5500 -> 55000
+	while count < 55000:
+		outputarray = ann.evaluate(matrixOfTestData[count])
+        	expectedOutputArray = outputcheckarray[count]
+		index = 0
+		expectedAnswer = 0
+		actualAnswer = 0
+		maxOfActual = outputarray[0]
+		maxOfExpected = expectedOutputArray[0]
+		# loop through both output arrays
+		while (index < len(expectedOutputArray)):
+			# if you found an element larger than your current max then change your max value accordingly
+			if(maxOfActual < outputarray[index]):
+				maxOfActual = outputarray[index]
+				actualAnswer = index
+			# if you found an element larger than your current max then change your max value accordingly
+			if(maxOfExpected < expectedOutputArray[index]):
+				maxOfExpected = expectedOutputArray[index]
+				expectedAnswer = index
+			index = index +1
+		if(expectedAnswer == actualAnswer):
+			correctnessCount = correctnessCount + 1.0
+	correctnessPercentage = float(correctnessCount) / 49500.0
+	correctnessVals.append(correctnessPercentage)
+sumPercentage = 0.0
+for val in correctnessVals:
+	sumPercentage = sumPercentage + val
+finalCorrectnessPercentage = sumPercentage / float(len(correctnessVals))
+print("Correctness Percentage: " + str(finalCorrectnessPercentage))
 
 
