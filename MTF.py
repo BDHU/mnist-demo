@@ -47,7 +47,7 @@ def evalANN(individual):
     sumError = 0
     # bestError = 1000000000
     while count < 5500:
-        outputarray = ann.evaluate(individual)
+        outputarray = ann.evaluate(matrixOfTestData[count])
         expectedOutputArray = outputcheckarray[count]
         for i in range(0, len(outputarray)):
             error = pow(outputarray[i] - expectedOutputArray[i],2)
@@ -108,10 +108,10 @@ for g in range(1, 10):
     # Otherwise you can select the parents of the generation from the offspring population only: pop[:] = offspring
 
     # This is the end of the "for" loop (end of generations!)
-    # f = open('results.txt', 'w')
-    # for ind in pop:
-    #     f.write(ind)
-    # f.close()
+     f = open('results.txt', 'w')
+     for ind in pop:
+         f.write(ind)
+     f.close()
 
 
 
