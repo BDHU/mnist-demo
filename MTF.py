@@ -45,7 +45,6 @@ def evalANN(individual):
     ann = ANN(num_inputs, num_hidden_nodes, num_outputs, individual)
     # TODO check, how pass in the
     sumError = 0
-    #bestError = 1000000000
     while count < 5500:
         outputarray = ann.evaluate(matrixOfTestData[count])
         expectedOutputArray = outputcheckarray[count]
